@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>E1113: Кубична текстура</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script src="three.min.js"></script>
+		<script src="OrbitControls.js"></script>
+		<script src="WebGL.js"></script>
+		<script src="vax.js"></script>
+		<script src="camera.js"></script>
+	</head>
+	
+	<body>
+		<script>
+			vaxInit( {antialias:true, alpha:true} );
+			
+			camera.fov = 30;
+			onWindowResize();
+					
+			scene.background = new THREE.CubeTextureLoader().load( [
+				'cube/posx.jpg', 'cube/negx.jpg',
+				'cube/posy.jpg', 'cube/negy.jpg',
+				'cube/posz.jpg', 'cube/negz.jpg' ] );
+							
+
+			
+			// обекти
+			var geometry = new THREE.IcosahedronGeometry( 5 , 0);
+			const refractionCube = new THREE.CubeTextureLoader().load( [
+				'cube/posx.jpg', 'cube/negx.jpg',
+				'cube/posy.jpg', 'cube/negy.jpg',
+				'cube/posz.jpg', 'cube/negz.jpg' ] );
+			refractionCube.mapping = THREE.CubeRefractionMapping;
+
+			var n = 50;
+			var objects = [];
+			for( var i=0; i<n; i++)
+			{
+				var material = new THREE.MeshBasicMaterial( {color: 'white', envMap: refractionCube} ),
+					mesh = new THREE.Mesh( geometry, material );
+					
+				mesh.scale.set( 10, 10, 10 );
+				mesh.position.set( THREE.Math.randFloatSpread(3000), THREE.Math.randFloat(-800,800),THREE.Math.randFloatSpread(3000) );
+				
+				objects.push( mesh );
+				scene.add( mesh );
+			}
+			
+
+			function animate()
+			{
+				cameraAnimate();
+				
+				for( var i=0; i<n; i++ )
+					objects[i].rotation.y = t+i;
+			}	
+
+
+			
+		</script>
+		
+	</body>
+</html>
+
+
